@@ -1,17 +1,13 @@
+import fs from "node:fs"
+import path from "node:path"
 import type { Metadata } from "next"
+import Image from "next/image"
 import Link from "next/link"
-import { Eye, Target } from "lucide-react"
 
 import { SiteHeader } from "@/components/landing/site-header"
 import { SiteFooter } from "@/components/landing/site-footer"
 import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { siteConfig } from "@/lib/site-config"
 import { cn } from "@/lib/utils"
@@ -19,6 +15,11 @@ import { cn } from "@/lib/utils"
 export const metadata: Metadata = {
   title: "회사소개",
   description: `${siteConfig.name}의 미션·비전, 연혁, 팀을 소개합니다.`,
+}
+
+function publicFileUrl(...parts: string[]): string | null {
+  const filePath = path.join(process.cwd(), "public", ...parts)
+  return fs.existsSync(filePath) ? `/${parts.join("/")}` : null
 }
 
 const milestones = [
@@ -59,7 +60,24 @@ const milestones = [
   },
 ]
 
-function MilestoneBody({ m, className }: { m: (typeof milestones)[0]; className?: string }) {
+function MilestoneBody({
+  m,
+  className,
+  variant = "light",
+}: {
+  m: (typeof milestones)[0]
+  className?: string
+  variant?: "light" | "dark"
+}) {
+  if (variant === "dark") {
+    return (
+      <div className={cn("min-w-0 max-w-md", className)}>
+        <time className="text-lg font-bold tabular-nums text-sky-300 sm:text-xl">{m.year}</time>
+        <h3 className="mt-1 text-base font-semibold text-white">{m.title}</h3>
+        <p className="mt-2 text-sm leading-relaxed text-white/85">{m.body}</p>
+      </div>
+    )
+  }
   return (
     <div className={cn("min-w-0 max-w-md", className)}>
       <time className="text-lg font-bold tabular-nums text-blue-600 sm:text-xl">{m.year}</time>
@@ -70,13 +88,35 @@ function MilestoneBody({ m, className }: { m: (typeof milestones)[0]; className?
 }
 
 export default function AboutPage() {
+  const aboutHeroUrl = publicFileUrl("images", "about-hero.jpg")
+  const historyBgUrl = publicFileUrl("images", "history-bg.jpg")
+  const ceoUrl =
+    publicFileUrl("images", "ceo.jpg") ?? publicFileUrl("images", "ceo.png")
+
   return (
     <>
       <SiteHeader />
       <main className="flex-1">
         {/* Hero */}
-        <section className="relative overflow-hidden border-b bg-gradient-to-br from-[#060d1a] via-[#0a1f3c] to-[#143d8a] py-20 text-center text-white sm:py-28">
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#060d1a]/40 to-[#060d1a]/80" />
+        <section className="relative min-h-[22rem] overflow-hidden border-b py-20 text-center text-white sm:min-h-[26rem] sm:py-28">
+          {aboutHeroUrl ? (
+            <>
+              <Image
+                src={aboutHeroUrl}
+                alt=""
+                fill
+                priority
+                className="object-cover"
+                sizes="100vw"
+              />
+              <div className="absolute inset-0 bg-black/60" aria-hidden />
+            </>
+          ) : (
+            <div
+              className="absolute inset-0 bg-gradient-to-br from-[#060d1a] via-[#0a1f3c] to-[#143d8a]"
+              aria-hidden
+            />
+          )}
           <div className="relative z-10 mx-auto max-w-3xl px-4 sm:px-6">
             <h1 className="text-balance text-3xl font-semibold tracking-tight sm:text-4xl md:text-5xl">
               주식회사 순한연구소 소개
@@ -99,49 +139,56 @@ export default function AboutPage() {
                 우리가 지향하는 방향과 그 이유를 한눈에 담았습니다.
               </p>
             </div>
-            <div className="mt-12 grid grid-cols-2 gap-4 sm:gap-6">
-              <Card className="min-w-0 border border-slate-200/80 bg-white shadow-md ring-0 transition-all duration-300 hover:-translate-y-1 hover:border-blue-500 hover:shadow-xl">
-                <CardHeader className="gap-3 p-4 sm:p-6">
-                  <div className="flex size-12 items-center justify-center rounded-full bg-[#0c2348] text-white shadow-sm">
-                    <Target className="size-5" aria-hidden />
-                  </div>
-                  <CardTitle className="text-base sm:text-lg">우리의 미션</CardTitle>
-                  <CardDescription className="text-pretty text-xs leading-relaxed text-muted-foreground sm:text-base">
-                    창업·정부지원·R&D·수출입 현장에서 말이 아닌 실행으로 책임지며, 기업이 집중해야
-                    할 본업에 에너지를 돌릴 수 있도록 기획·실무·정산까지 매니징합니다.
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-              <Card className="min-w-0 border border-slate-200/80 bg-white shadow-md ring-0 transition-all duration-300 hover:-translate-y-1 hover:border-blue-500 hover:shadow-xl">
-                <CardHeader className="gap-3 p-4 sm:p-6">
-                  <div className="flex size-12 items-center justify-center rounded-full bg-[#0c2348] text-white shadow-sm">
-                    <Eye className="size-5" aria-hidden />
-                  </div>
-                  <CardTitle className="text-base sm:text-lg">우리의 비전</CardTitle>
-                  <CardDescription className="text-pretty text-xs leading-relaxed text-muted-foreground sm:text-base">
-                    산재한 제조·업무 데이터를 연결하고, AX·AI 비전과 지능형 공장 에이전트로
-                    스마트팩토리와 완성도 높은 업무 보조 환경을 구현하는 기술·컨설팅 기업이
-                    되겠습니다.
-                  </CardDescription>
-                </CardHeader>
-              </Card>
+            <div className="mt-12 grid gap-10 md:grid-cols-2 md:gap-14">
+              <div className="border-l-4 border-[#0066cc] pl-6 sm:pl-8">
+                <h3 className="text-3xl font-bold tracking-tight text-[#0066cc] sm:text-4xl md:text-5xl">
+                  OUR MISSION
+                </h3>
+                <p className="mt-4 text-pretty text-base leading-relaxed text-neutral-700 sm:text-lg">
+                  창업·정부지원·R&D·수출입 현장에서 말이 아닌 실행으로 책임지며, 기업이 집중해야 할
+                  본업에 에너지를 돌릴 수 있도록 기획·실무·정산까지 매니징합니다.
+                </p>
+              </div>
+              <div className="border-l-4 border-[#0066cc] pl-6 sm:pl-8">
+                <h3 className="text-3xl font-bold tracking-tight text-[#0066cc] sm:text-4xl md:text-5xl">
+                  OUR VISION
+                </h3>
+                <p className="mt-4 text-pretty text-base leading-relaxed text-neutral-700 sm:text-lg">
+                  산재한 제조·업무 데이터를 연결하고, AX·AI 비전과 지능형 공장 에이전트로 스마트팩토리와
+                  완성도 높은 업무 보조 환경을 구현하는 기술·컨설팅 기업이 되겠습니다.
+                </p>
+              </div>
             </div>
           </div>
         </section>
 
         {/* 연혁 타임라인 */}
-        <section className="border-t bg-[#f8fafc] py-16 sm:py-24">
-          <div className="mx-auto max-w-5xl px-4 sm:px-6">
-            <h2 className="text-center text-2xl font-semibold tracking-tight sm:text-3xl">
+        <section className="relative overflow-hidden border-t py-16 sm:py-24">
+          {historyBgUrl ? (
+            <>
+              <Image
+                src={historyBgUrl}
+                alt=""
+                fill
+                className="object-cover"
+                sizes="100vw"
+              />
+              <div className="absolute inset-0 bg-black/75" aria-hidden />
+            </>
+          ) : (
+            <div className="absolute inset-0 bg-[#0a1628]" aria-hidden />
+          )}
+          <div className="relative z-10 mx-auto max-w-5xl px-4 sm:px-6">
+            <h2 className="text-center text-2xl font-semibold tracking-tight text-white sm:text-3xl">
               연혁
             </h2>
-            <p className="mx-auto mt-3 max-w-xl text-center text-muted-foreground sm:text-base">
+            <p className="mx-auto mt-3 max-w-xl text-center text-white/80 sm:text-base">
               순한연구소의 주요 이정표입니다. (예시 연혁)
             </p>
 
             <div className="relative mx-auto mt-16 max-w-4xl">
               <div
-                className="pointer-events-none absolute top-0 bottom-0 left-1/2 z-0 hidden w-1 -translate-x-1/2 bg-blue-600 sm:block"
+                className="pointer-events-none absolute top-0 bottom-0 left-1/2 z-0 hidden w-1 -translate-x-1/2 bg-white/25 sm:block"
                 aria-hidden
               />
               <ul className="relative z-10 space-y-0">
@@ -150,21 +197,21 @@ export default function AboutPage() {
                   return (
                     <li key={m.year} className="relative pb-14 last:pb-0 sm:pb-20 sm:last:pb-8">
                       <span
-                        className="absolute top-2 left-1/2 z-20 hidden size-4 -translate-x-1/2 rounded-full border-4 border-[#f8fafc] bg-blue-600 ring-2 ring-blue-600/40 sm:block"
+                        className="absolute top-2 left-1/2 z-20 hidden size-4 -translate-x-1/2 rounded-full border-4 border-slate-900 bg-sky-400 ring-2 ring-white/30 sm:block"
                         aria-hidden
                       />
-                      <div className="relative border-l-4 border-blue-600 pl-8 sm:hidden">
+                      <div className="relative border-l-4 border-sky-400/90 pl-8 sm:hidden">
                         <span
-                          className="absolute top-2 left-0 z-10 size-3.5 -translate-x-[calc(50%+2px)] rounded-full border-[3px] border-[#f8fafc] bg-blue-600"
+                          className="absolute top-2 left-0 z-10 size-3.5 -translate-x-[calc(50%+2px)] rounded-full border-[3px] border-slate-900 bg-sky-400"
                           aria-hidden
                         />
-                        <MilestoneBody m={m} />
+                        <MilestoneBody m={m} variant="dark" />
                       </div>
                       <div className="relative hidden min-h-[5.5rem] sm:grid sm:grid-cols-2 sm:gap-8">
                         {isEven ? (
                           <>
                             <div className="flex justify-end pr-4">
-                              <MilestoneBody m={m} className="text-right" />
+                              <MilestoneBody m={m} className="text-right" variant="dark" />
                             </div>
                             <div aria-hidden className="min-w-0" />
                           </>
@@ -172,7 +219,7 @@ export default function AboutPage() {
                           <>
                             <div aria-hidden className="min-w-0" />
                             <div className="flex justify-start pl-4">
-                              <MilestoneBody m={m} className="text-left" />
+                              <MilestoneBody m={m} className="text-left" variant="dark" />
                             </div>
                           </>
                         )}
@@ -181,6 +228,56 @@ export default function AboutPage() {
                   )
                 })}
               </ul>
+            </div>
+          </div>
+        </section>
+
+        {/* 대표 인사말 */}
+        <section className="border-t bg-white py-16 sm:py-24">
+          <div className="mx-auto max-w-6xl px-4 sm:px-6">
+            <h2 className="text-center text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
+              대표 인사말
+            </h2>
+            <div className="mt-12 grid items-start gap-10 md:grid-cols-2 md:gap-12 lg:gap-16">
+              <div className="mx-auto w-full max-w-md md:mx-0">
+                {ceoUrl ? (
+                  <div className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black/5">
+                    <Image
+                      src={ceoUrl}
+                      alt="신성호 대표이사"
+                      width={560}
+                      height={700}
+                      className="aspect-[4/5] w-full origin-center scale-[1.06] object-cover object-center translate-x-[2.5%] sm:translate-x-[3%]"
+                      sizes="(min-width: 768px) 40vw, 100vw"
+                    />
+                  </div>
+                ) : (
+                  <div
+                    className="flex aspect-[4/5] w-full max-w-md items-center justify-center rounded-lg bg-neutral-200 text-sm font-medium text-neutral-500 shadow-lg ring-1 ring-black/5"
+                    role="img"
+                    aria-label="대표 사진 자리"
+                  >
+                    이미지 준비 중
+                  </div>
+                )}
+              </div>
+              <div className="min-w-0 space-y-6 text-left">
+                <div>
+                  <p className="text-2xl font-bold text-foreground">신성호</p>
+                  <p className="mt-1 text-base font-medium text-[#0066cc]">대표이사</p>
+                </div>
+                <div className="space-y-4 text-base leading-relaxed text-neutral-700 sm:text-lg">
+                  <p>안녕하십니까, 주식회사 순한연구소 대표이사 신성호입니다.</p>
+                  <p>
+                    저희 순한연구소는 창업·정부지원사업·R&D·수출 컨설팅을 통해 단순 자문이 아닌 실행
+                    파트너로서 기업 곁에 함께합니다.
+                  </p>
+                  <p>
+                    대표님의 핵심 의사결정에만 집중하실 수 있도록, 나머지 모든 실무를 저희가
+                    책임지겠습니다.
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -208,11 +305,37 @@ export default function AboutPage() {
                   </div>
                   <p className="text-sm leading-relaxed text-muted-foreground">
                     정부지원사업과 제조 현장 컨설팅을 두루 거치며, &ldquo;말 대신 결과&rdquo;를
-                    우선하는 보육형 매니징 문화를 만들어 왔습니다. 데이터와 AI가 비즈니스에
-                    닿는 지점을 함께 찾는 것을 즐깁니다.
+                    우선하는 보육형 매니징 문화를 만들어 왔습니다. 데이터와 AI가 비즈니스에 닿는
+                    지점을 함께 찾는 것을 즐깁니다.
                   </p>
                 </CardContent>
               </Card>
+            </div>
+          </div>
+        </section>
+
+        {/* 기술 · 특허 · 인증 현황 */}
+        <section className="border-t bg-neutral-50 py-16 sm:py-24">
+          <div className="mx-auto max-w-6xl px-4 sm:px-6">
+            <h2 className="text-center text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
+              기술 · 특허 · 인증 현황
+            </h2>
+            <div className="mt-12 grid gap-6 sm:grid-cols-3">
+              {(
+                [
+                  { title: "특허 현황" },
+                  { title: "인증 현황" },
+                  { title: "기술 현황" },
+                ] as const
+              ).map((card) => (
+                <div
+                  key={card.title}
+                  className="flex min-h-[180px] flex-col rounded-lg border border-slate-200 bg-white p-6 shadow-md"
+                >
+                  <h3 className="text-lg font-semibold text-foreground">{card.title}</h3>
+                  <p className="mt-auto pt-6 text-sm text-neutral-500">추후 업데이트 예정</p>
+                </div>
+              ))}
             </div>
           </div>
         </section>

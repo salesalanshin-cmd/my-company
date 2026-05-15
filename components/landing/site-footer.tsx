@@ -29,7 +29,7 @@ export function SiteFooter() {
             <Link className={cn(footerLinkClass)} href="/about">
               회사소개
             </Link>
-            <Link className={cn(footerLinkClass)} href="/#services">
+            <Link className={cn(footerLinkClass)} href="/services">
               서비스
             </Link>
             <Link className={cn(footerLinkClass)} href="/#pricing">
