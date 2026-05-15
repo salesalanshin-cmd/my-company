@@ -3,12 +3,12 @@ import path from "node:path"
 import type { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
+import { Eye, Target } from "lucide-react"
+import type { LucideIcon } from "lucide-react"
 
 import { SiteHeader } from "@/components/landing/site-header"
 import { SiteFooter } from "@/components/landing/site-footer"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { siteConfig } from "@/lib/site-config"
 import { cn } from "@/lib/utils"
 
@@ -60,6 +60,8 @@ const milestones = [
   },
 ]
 
+const orgTeams = ["구매영업", "인사총무", "과제전략팀", "IT팀", "무역팀"] as const
+
 function MilestoneBody({
   m,
   className,
@@ -87,12 +89,100 @@ function MilestoneBody({
   )
 }
 
+const missionVisionItems = [
+  {
+    label: "OUR MISSION" as const,
+    body: "창업·정부지원·R&D·수출입 현장에서 말이 아닌 실행으로 책임지며, 기업이 집중해야 할 본업에 에너지를 돌릴 수 있도록 기획·실무·정산까지 매니징합니다.",
+    icon: Target,
+  },
+  {
+    label: "OUR VISION" as const,
+    body: "산재한 제조·업무 데이터를 연결하고, AX·AI 비전과 지능형 공장 에이전트로 스마트팩토리와 완성도 높은 업무 보조 환경을 구현하는 기술·컨설팅 기업이 되겠습니다.",
+    icon: Eye,
+  },
+]
+
+function MissionVisionCard({
+  label,
+  body,
+  icon: Icon,
+}: {
+  label: string
+  body: string
+  icon: LucideIcon
+}) {
+  return (
+    <div
+      className={cn(
+        "group flex w-full rounded-xl border border-blue-200 bg-white px-8 py-6 shadow-md",
+        "transition-all duration-300 hover:-translate-y-1 hover:border-blue-500 hover:shadow-xl"
+      )}
+    >
+      <div
+        className="mr-5 w-1 shrink-0 self-stretch rounded-full bg-blue-600 transition-colors duration-300 group-hover:bg-blue-700"
+        aria-hidden
+      />
+      <div className="flex min-w-0 flex-1 items-center gap-6">
+        <div className="min-w-0 flex-1">
+          <h3 className="text-lg font-bold tracking-wide text-blue-600 uppercase">{label}</h3>
+          <p className="mt-2 text-pretty text-sm leading-relaxed text-gray-600 sm:text-base">
+            {body}
+          </p>
+        </div>
+        <Icon
+          className="size-12 shrink-0 text-blue-600 sm:size-14"
+          strokeWidth={1.5}
+          aria-hidden
+        />
+      </div>
+    </div>
+  )
+}
+
+function OrgConnector({ className }: { className?: string }) {
+  return <div className={cn("w-0.5 bg-[#0066cc]", className)} aria-hidden />
+}
+
+function OrgChart() {
+  return (
+    <div className="mx-auto flex w-full max-w-5xl flex-col items-center">
+      <div className="rounded-lg bg-[#0c2348] px-10 py-4 text-center text-base font-semibold text-white shadow-md sm:px-14 sm:text-lg">
+        대표이사
+      </div>
+
+      <OrgConnector className="h-10" />
+
+      <div className="rounded-lg bg-[#0066cc] px-10 py-4 text-center text-base font-semibold text-white shadow-md sm:px-14 sm:text-lg">
+        R&D 전담부서
+      </div>
+
+      <OrgConnector className="h-10" />
+
+      <div className="relative w-full px-2 sm:px-4">
+        <div
+          className="absolute top-0 left-[10%] right-[10%] hidden h-0.5 bg-[#0066cc] lg:block"
+          aria-hidden
+        />
+        <div className="grid grid-cols-2 gap-x-3 gap-y-8 sm:grid-cols-3 sm:gap-x-4 lg:grid-cols-5 lg:gap-y-0">
+          {orgTeams.map((team) => (
+            <div key={team} className="flex flex-col items-center">
+              <OrgConnector className="mb-0 h-8 lg:h-10" />
+              <div className="w-full rounded-lg border-2 border-[#0066cc] bg-white px-2 py-3 text-center text-sm font-semibold text-[#0066cc] shadow-sm sm:px-3 sm:text-base">
+                {team}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function AboutPage() {
   const aboutHeroUrl = publicFileUrl("images", "about-hero.jpg")
   const historyBgUrl = publicFileUrl("images", "history-bg.jpg")
   const ceoUrl =
     publicFileUrl("images", "ceo.jpg") ?? publicFileUrl("images", "ceo.png")
-
   return (
     <>
       <SiteHeader />
@@ -122,14 +212,15 @@ export default function AboutPage() {
               주식회사 순한연구소 소개
             </h1>
             <p className="mx-auto mt-6 max-w-2xl text-pretty text-base leading-relaxed text-white/85 sm:text-lg">
-              보육형 매니징과 데이터·AI 전략으로 기업의 실행력과 제조 경쟁력을 함께 키워 가는
-              파트너입니다.
+              보육형 매니징과 데이터, AI 전략으로 기업의 실행력과
+              <br />
+              제조 경쟁력을 함께 키워가는 파트너입니다.
             </p>
           </div>
         </section>
 
         {/* 미션 / 비전 */}
-        <section className="border-t bg-white py-16 sm:py-24">
+        <section className="border-t bg-white py-16 pb-24 sm:py-24 sm:pb-28">
           <div className="mx-auto max-w-6xl px-4 sm:px-6">
             <div className="mx-auto max-w-2xl text-center">
               <h2 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
@@ -139,31 +230,16 @@ export default function AboutPage() {
                 우리가 지향하는 방향과 그 이유를 한눈에 담았습니다.
               </p>
             </div>
-            <div className="mt-12 grid gap-10 md:grid-cols-2 md:gap-14">
-              <div className="border-l-4 border-[#0066cc] pl-6 sm:pl-8">
-                <h3 className="text-3xl font-bold tracking-tight text-[#0066cc] sm:text-4xl md:text-5xl">
-                  OUR MISSION
-                </h3>
-                <p className="mt-4 text-pretty text-base leading-relaxed text-neutral-700 sm:text-lg">
-                  창업·정부지원·R&D·수출입 현장에서 말이 아닌 실행으로 책임지며, 기업이 집중해야 할
-                  본업에 에너지를 돌릴 수 있도록 기획·실무·정산까지 매니징합니다.
-                </p>
-              </div>
-              <div className="border-l-4 border-[#0066cc] pl-6 sm:pl-8">
-                <h3 className="text-3xl font-bold tracking-tight text-[#0066cc] sm:text-4xl md:text-5xl">
-                  OUR VISION
-                </h3>
-                <p className="mt-4 text-pretty text-base leading-relaxed text-neutral-700 sm:text-lg">
-                  산재한 제조·업무 데이터를 연결하고, AX·AI 비전과 지능형 공장 에이전트로 스마트팩토리와
-                  완성도 높은 업무 보조 환경을 구현하는 기술·컨설팅 기업이 되겠습니다.
-                </p>
-              </div>
+            <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-2">
+              {missionVisionItems.map((item) => (
+                <MissionVisionCard key={item.label} {...item} />
+              ))}
             </div>
           </div>
         </section>
 
         {/* 연혁 타임라인 */}
-        <section className="relative overflow-hidden border-t py-16 sm:py-24">
+        <section className="relative overflow-hidden border-t pt-24 pb-16 sm:pt-28 sm:pb-24">
           {historyBgUrl ? (
             <>
               <Image
@@ -183,7 +259,7 @@ export default function AboutPage() {
               연혁
             </h2>
             <p className="mx-auto mt-3 max-w-xl text-center text-white/80 sm:text-base">
-              순한연구소의 주요 이정표입니다. (예시 연혁)
+              순한연구소의 주요 이정표입니다.
             </p>
 
             <div className="relative mx-auto mt-16 max-w-4xl">
@@ -238,22 +314,22 @@ export default function AboutPage() {
             <h2 className="text-center text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
               대표 인사말
             </h2>
-            <div className="mt-12 grid items-start gap-10 md:grid-cols-2 md:gap-12 lg:gap-16">
-              <div className="mx-auto w-full max-w-md md:mx-0">
+            <div className="mt-12 grid items-start gap-10 md:grid-cols-[minmax(0,340px)_1fr] md:gap-12 lg:gap-16">
+              <div className="flex justify-start">
                 {ceoUrl ? (
-                  <div className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black/5">
+                  <div className="w-full max-w-[340px] overflow-hidden rounded-lg shadow-lg ring-1 ring-black/5">
                     <Image
                       src={ceoUrl}
                       alt="신성호 대표이사"
                       width={560}
                       height={700}
-                      className="aspect-[4/5] w-full origin-center scale-[1.06] object-cover object-center translate-x-[2.5%] sm:translate-x-[3%]"
-                      sizes="(min-width: 768px) 40vw, 100vw"
+                      className="aspect-[4/5] w-full object-cover object-center"
+                      sizes="(min-width: 768px) 340px, 100vw"
                     />
                   </div>
                 ) : (
                   <div
-                    className="flex aspect-[4/5] w-full max-w-md items-center justify-center rounded-lg bg-neutral-200 text-sm font-medium text-neutral-500 shadow-lg ring-1 ring-black/5"
+                    className="flex aspect-[4/5] w-full max-w-[340px] items-center justify-center rounded-lg bg-neutral-200 text-sm font-medium text-neutral-500 shadow-lg ring-1 ring-black/5"
                     role="img"
                     aria-label="대표 사진 자리"
                   >
@@ -269,12 +345,18 @@ export default function AboutPage() {
                 <div className="space-y-4 text-base leading-relaxed text-neutral-700 sm:text-lg">
                   <p>안녕하십니까, 주식회사 순한연구소 대표이사 신성호입니다.</p>
                   <p>
-                    저희 순한연구소는 창업·정부지원사업·R&D·수출 컨설팅을 통해 단순 자문이 아닌 실행
-                    파트너로서 기업 곁에 함께합니다.
+                    저희 순한연구소는 창업·정부지원사업·R&D·수출 컨설팅을 통해 단순 자문이 아닌
+                    실행 파트너로서 기업 곁에 함께하고 있으며, 찾아주신 고객분들과 함께 지속적으로
+                    성장하고 있습니다.
+                  </p>
+                  <p>
+                    격변하는 AI, 데이터 시대를 맞아, 고객사의 업무 프로세스와 핵심 공정을
+                    디지털화 하고, 정부지원을 통해 AI를 요소요소에 접목시켜 생산성 향상과 글로벌
+                    경쟁력을 제고하고자, 임직원이 불철주야 노력하고 있습니다.
                   </p>
                   <p>
                     대표님의 핵심 의사결정에만 집중하실 수 있도록, 나머지 모든 실무를 저희가
-                    책임지겠습니다.
+                    책임지겠습니다. 감사합니다.
                   </p>
                 </div>
               </div>
@@ -282,34 +364,17 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* 팀 소개 */}
+        {/* 조직도 */}
         <section className="border-t bg-white py-16 sm:py-24">
           <div className="mx-auto max-w-6xl px-4 sm:px-6">
             <div className="mx-auto max-w-2xl text-center">
-              <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">팀 소개</h2>
+              <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">조직도</h2>
               <p className="mt-3 text-muted-foreground sm:text-base">
-                리드를 맡고 있는 대표를 소개합니다.
+                순한연구소의 조직 구조입니다.
               </p>
             </div>
-            <div className="mx-auto mt-12 max-w-sm">
-              <Card className="border border-slate-200/80 bg-white shadow-md ring-0">
-                <CardContent className="flex flex-col items-center gap-6 px-6 pt-10 pb-10 text-center">
-                  <Avatar className="size-32 border border-slate-200 shadow-sm">
-                    <AvatarFallback className="bg-gradient-to-br from-blue-500 to-blue-700 text-3xl font-semibold text-white">
-                      대
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="space-y-2">
-                    <p className="text-xl font-semibold text-foreground">김○○</p>
-                    <p className="text-sm font-medium text-blue-600">대표이사</p>
-                  </div>
-                  <p className="text-sm leading-relaxed text-muted-foreground">
-                    정부지원사업과 제조 현장 컨설팅을 두루 거치며, &ldquo;말 대신 결과&rdquo;를
-                    우선하는 보육형 매니징 문화를 만들어 왔습니다. 데이터와 AI가 비즈니스에 닿는
-                    지점을 함께 찾는 것을 즐깁니다.
-                  </p>
-                </CardContent>
-              </Card>
+            <div className="mt-14">
+              <OrgChart />
             </div>
           </div>
         </section>

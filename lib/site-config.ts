@@ -13,9 +13,16 @@ export const siteConfig = {
   /** 예: "dQw4w9WgXcQ" — 설정 시 배경에 유튜브 임베드(음소거·자동재생은 유튜브 정책에 따름) */
   heroYoutubeId: "" as string,
 
+  /** Hero 슬라이드 이미지 — 경로만 바꾸면 메인 배경이 교체됩니다 */
+  heroImages: [
+    "/images/hero/slide1.jpg",
+    "/images/hero/slide2.jpg",
+    "/images/hero/slide3.jpg",
+  ],
+
   contact: {
-    email: "contact@soonhan.example.com",
-    phone: "02-0000-0000",
-    address: "서울특별시 (상세 주소는 사업자 등록 후 반영)",
+    email: "info@soonanlabs.com",
+    phone: "010-5920-8487",
+    address: "경상북도 경산시 경안로 65길 11-1, 주식회사 순한연구소",
   },
 } as const

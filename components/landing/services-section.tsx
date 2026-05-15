@@ -1,10 +1,12 @@
 import {
   Bot,
+  Cog,
   Factory,
   Globe2,
-  Layers3,
   Lightbulb,
   LineChart,
+  Smartphone,
+  Users,
 } from "lucide-react"
 
 import {
@@ -16,34 +18,44 @@ import {
 
 const services = [
   {
+    icon: Users,
+    title: "직원화 서비스",
+    body: "(주)순한연구소를 고객사 직원처럼 활용하는 월 구독형 서비스",
+  },
+  {
     icon: Lightbulb,
     title: "창업 지원",
-    body: "사업 구조 설계부터 지원사업 매칭, 사업계획·실행까지 단계별로 동행합니다.",
+    body: "예비·초기창업자, 소상공인, 중소기업 대표님을 위한 창업패키지",
   },
   {
     icon: LineChart,
     title: "정부지원사업 · R&D",
-    body: "과제 기획, 제안·신청, 수행 관리, 정산까지 행정·기술 문서를 일관되게 관리합니다.",
+    body: "매년 35조원 규모 정부지원사업 기획~정산 전 과정 지원",
   },
   {
     icon: Globe2,
     title: "수출입 컨설팅",
-    body: "시장 조사, 규제·물류, 거래 구조까지 실무 관점에서 실행 가능한 로드맵을 제시합니다.",
-  },
-  {
-    icon: Layers3,
-    title: "보육형 매니징",
-    body: "단순 컨설팅이 아니라 기획·실무·수행·사후정산을 대행하며 내부 인력처럼 책임집니다.",
+    body: "10년 이상 해외영업 경험, 30여 개국 바이어 발굴·무역실무",
   },
   {
     icon: Factory,
-    title: "제조 AX · 데이터",
-    body: "현장 데이터 자동 수집, 공정 가시화, 스마트팩토리 도입을 위한 AX·데이터 전략을 준비합니다.",
+    title: "제조 AX",
+    body: "스마트공장, 제조 데이터 수집·가시화, 공정 자동화",
+  },
+  {
+    icon: Smartphone,
+    title: "앱 및 홈페이지 개발",
+    body: "기업 맞춤형 모바일 앱·웹사이트 기획~개발~운영",
+  },
+  {
+    icon: Cog,
+    title: "자동화 시스템 개발",
+    body: "정부지원사업 기반 로봇 자동화 시스템 개발 및 도입",
   },
   {
     icon: Bot,
-    title: "AI · 비전 · 에이전트",
-    body: "제조·업무 데이터를 다각도로 연결해 업무 보조와 지능형 공장 에이전트 구현을 지향합니다.",
+    title: "AI 비전 에이전트",
+    body: "AI 머신러닝 불량검출, 지능형 에이전트 구현",
   },
 ]
 
@@ -64,7 +76,7 @@ export function ServicesSection() {
             디지털 전환 기반을 함께 만듭니다.
           </p>
         </div>
-        <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {services.map(({ icon: Icon, title, body }) => (
             <Card
               key={title}

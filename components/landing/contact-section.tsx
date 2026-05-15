@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import emailjs from "@emailjs/browser"
 import { Mail, MapPin, Phone } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -20,10 +21,16 @@ import { cn } from "@/lib/utils"
 const fieldFocus =
   "focus-visible:border-blue-500 focus-visible:ring-3 focus-visible:ring-blue-500/35"
 
-export function ContactSection() {
-  const [sent, setSent] = useState(false)
+const EMAILJS_SERVICE_ID = "service_l38ouh3"
+const EMAILJS_TEMPLATE_ID = "template_boda7zp"
+const EMAILJS_PUBLIC_KEY = "fXBzjjk7ONC8JvH1t"
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+type FormStatus = "idle" | "sending" | "success" | "error"
+
+export function ContactSection() {
+  const [status, setStatus] = useState<FormStatus>("idle")
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     const form = e.currentTarget
     const data = new FormData(form)
@@ -31,13 +38,31 @@ export function ContactSection() {
     const email = String(data.get("email") ?? "").trim()
     const company = String(data.get("company") ?? "").trim()
     const message = String(data.get("message") ?? "").trim()
-    const subject = encodeURIComponent(`[${siteConfig.shortName} 문의] ${company || name}`)
-    const body = encodeURIComponent(
-      `이름: ${name}\n이메일: ${email}\n회사: ${company}\n\n문의 내용:\n${message}`
-    )
-    window.location.href = `mailto:${siteConfig.contact.email}?subject=${subject}&body=${body}`
-    setSent(true)
+
+    setStatus("sending")
+
+    try {
+      await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        {
+          name,
+          email,
+          company,
+          message,
+          title: "[순한연구소 상담문의]",
+        },
+        { publicKey: EMAILJS_PUBLIC_KEY }
+      )
+
+      setStatus("success")
+      form.reset()
+    } catch {
+      setStatus("error")
+    }
   }
+
+  const isSending = status === "sending"
 
   return (
     <section
@@ -50,8 +75,7 @@ export function ContactSection() {
             문의
           </h2>
           <p className="mt-3 max-w-md text-white/75 sm:text-base">
-            프로젝트 범위·일정을 알려 주시면 검토 후 연락드립니다. 민감 정보는 이메일 본문에
-            최소한으로 적어 주세요.
+            상담 문의는 아래 연락처 중 편한 곳으로 연락주시면, 검토 후 답변드리겠습니다.
           </p>
           <dl className="mt-10 space-y-6 text-sm">
             <div className="flex gap-4">
@@ -97,7 +121,7 @@ export function ContactSection() {
           <CardHeader>
             <CardTitle className="text-base text-foreground">상담 요청 폼</CardTitle>
             <CardDescription>
-              제출 시 기본 메일 앱이 열립니다. 메일이 열리지 않으면 왼쪽 이메일로 직접 보내 주세요.
+              폼을 작성해 주시면 검토 후 연락드립니다.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -108,6 +132,7 @@ export function ContactSection() {
                   id="name"
                   name="name"
                   required
+                  disabled={isSending}
                   placeholder="홍길동"
                   autoComplete="name"
                   className={cn(fieldFocus)}
@@ -120,6 +145,7 @@ export function ContactSection() {
                   name="email"
                   type="email"
                   required
+                  disabled={isSending}
                   placeholder="you@company.com"
                   autoComplete="email"
                   className={cn(fieldFocus)}
@@ -130,6 +156,7 @@ export function ContactSection() {
                 <Input
                   id="company"
                   name="company"
+                  disabled={isSending}
                   placeholder="주식회사 ○○"
                   className={cn(fieldFocus)}
                 />
@@ -140,6 +167,7 @@ export function ContactSection() {
                   id="message"
                   name="message"
                   required
+                  disabled={isSending}
                   rows={5}
                   placeholder="희망 서비스, 일정, 예산 범위 등을 적어 주세요."
                   className={cn(fieldFocus)}
@@ -147,13 +175,19 @@ export function ContactSection() {
               </div>
               <Button
                 type="submit"
-                className="h-10 w-full border-0 bg-blue-600 text-white hover:bg-blue-700"
+                disabled={isSending}
+                className="h-10 w-full border-0 bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-60"
               >
-                메일로 보내기
+                {isSending ? "전송 중..." : "문의 보내기"}
               </Button>
-              {sent ? (
-                <p className="text-xs text-muted-foreground" role="status">
-                  메일 작성 화면이 열렸다면 내용을 확인 후 전송해 주세요.
+              {status === "success" ? (
+                <p className="text-sm text-green-600" role="status">
+                  문의가 접수되었습니다. 검토 후 연락드리겠습니다.
+                </p>
+              ) : null}
+              {status === "error" ? (
+                <p className="text-sm text-red-600" role="alert">
+                  전송 중 오류가 발생했습니다. 직접 연락 부탁드립니다.
                 </p>
               ) : null}
             </form>

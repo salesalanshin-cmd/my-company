@@ -5,35 +5,33 @@ import Image from "next/image"
 import Link from "next/link"
 
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
 import { siteConfig } from "@/lib/site-config"
 import { cn } from "@/lib/utils"
 
 const heroButtonClass =
   "border-white bg-transparent text-white hover:bg-white/10 hover:text-white"
 
-const HERO_SLIDES = [
-  "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=1920&q=80",
-  "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=1920&q=80",
-  "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1920&q=80",
-] as const
+const heroTextShadow =
+  "[text-shadow:0_2px_12px_rgba(0,0,0,0.45),0_4px_32px_rgba(0,0,0,0.35)]"
 
 const SLIDE_INTERVAL_MS = 4000
 const FADE_DURATION_MS = 1200
 
 function HeroImageSlider() {
+  const slides = siteConfig.heroImages
   const [index, setIndex] = useState(0)
 
   useEffect(() => {
+    if (slides.length <= 1) return
     const id = window.setInterval(() => {
-      setIndex((prev) => (prev + 1) % HERO_SLIDES.length)
+      setIndex((prev) => (prev + 1) % slides.length)
     }, SLIDE_INTERVAL_MS)
     return () => window.clearInterval(id)
-  }, [])
+  }, [slides.length])
 
   return (
     <div className="absolute inset-0">
-      {HERO_SLIDES.map((src, i) => (
+      {slides.map((src, i) => (
         <Image
           key={src}
           src={src}
@@ -58,7 +56,7 @@ function HeroImageSlider() {
         role="tablist"
         aria-label="히어로 슬라이드"
       >
-        {HERO_SLIDES.map((src, i) => (
+        {slides.map((src, i) => (
           <span
             key={src}
             role="tab"
@@ -117,19 +115,56 @@ export function HeroSection() {
       </div>
 
       <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col items-center gap-8 px-4 py-20 text-center sm:px-6 sm:py-28">
-        <Badge
-          variant="outline"
-          className="w-fit border-white/40 bg-white/10 text-white backdrop-blur-sm"
-        >
-          보육형 매니징 · 컨설팅
-        </Badge>
+        <div className="flex w-full max-w-4xl flex-col items-center gap-6 sm:gap-8">
+          <div
+            className={cn(
+              "inline-flex items-center gap-2.5 rounded-full border border-white/25",
+              "bg-white/20 px-4 py-2 text-sm text-white backdrop-blur-md",
+              heroTextShadow
+            )}
+          >
+            <span
+              className="size-2.5 shrink-0 rounded-full bg-gradient-to-br from-[#4dabf7] to-[#0066cc] shadow-[0_0_8px_rgba(0,102,204,0.6)]"
+              aria-hidden
+            />
+            <span className="font-medium tracking-wide">
+              <span className="bg-gradient-to-r from-[#7ec8ff] via-[#3b9eff] to-[#0066cc] bg-clip-text font-semibold text-transparent">
+                AI+
+              </span>
+              <span className="text-white/95"> Powered Consulting</span>
+            </span>
+          </div>
+
+          <div className={cn("w-full space-y-1 sm:space-y-2", heroTextShadow)}>
+            <p className="text-3xl font-normal tracking-tight text-white sm:text-4xl md:text-5xl">
+              Beyond Consulting.
+            </p>
+            <p className="text-4xl font-extrabold leading-tight tracking-tight text-white sm:text-5xl md:text-6xl lg:text-[4.25rem]">
+              We Execute.
+              <br className="sm:hidden" />
+              <span className="hidden sm:inline"> </span>
+              We Deliver.
+            </p>
+          </div>
+        </div>
+
         <div className="mx-auto max-w-3xl space-y-6">
-          <h1 className="text-balance text-3xl font-semibold tracking-tight text-white sm:text-4xl md:text-5xl">
+          <h1
+            className={cn(
+              "text-balance text-3xl font-semibold tracking-tight text-white sm:text-4xl md:text-5xl",
+              heroTextShadow
+            )}
+          >
             기획부터 실무·수행·사후정산까지,
             <br className="hidden sm:block" />
             {siteConfig.name}가 함께합니다
           </h1>
-          <p className="text-pretty text-base leading-relaxed text-white/90 sm:text-lg">
+          <p
+            className={cn(
+              "text-pretty text-base leading-relaxed text-white/90 sm:text-lg",
+              heroTextShadow
+            )}
+          >
             창업 지원, 정부지원사업 및 R&amp;D, 수출입 컨설팅을 넘어 단순 자문이 아닌 실행 파트너로
             남습니다. 제조 데이터·AX·AI 비전으로 스마트팩토리와 지능형 공장 에이전트를 향한
             로드맵도 함께 그립니다.
