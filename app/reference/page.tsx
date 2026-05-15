@@ -17,8 +17,11 @@ import { siteConfig } from "@/lib/site-config"
 import { cn } from "@/lib/utils"
 
 export const metadata: Metadata = {
-  title: "레퍼런스",
-  description: `${siteConfig.name}와 함께 성장한 기업들의 실제 사례와 성과를 소개합니다.`,
+  title: {
+    absolute: "레퍼런스 | 주식회사 순한연구소",
+  },
+  description:
+    "순한연구소와 함께 성장한 기업들의 실제 성과 사례를 확인하세요. 누적 정부지원금 11억원+, 수출 50만달러+ 달성.",
 }
 
 const stats = [

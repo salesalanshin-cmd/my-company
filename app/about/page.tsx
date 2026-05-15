@@ -13,8 +13,11 @@ import { siteConfig } from "@/lib/site-config"
 import { cn } from "@/lib/utils"
 
 export const metadata: Metadata = {
-  title: "회사소개",
-  description: `${siteConfig.name}의 미션·비전, 연혁, 팀을 소개합니다.`,
+  title: {
+    absolute: "회사소개 | 주식회사 순한연구소",
+  },
+  description:
+    "보육형 매니징과 데이터, AI 전략으로 기업의 실행력과 제조 경쟁력을 함께 키워가는 파트너, 주식회사 순한연구소를 소개합니다.",
 }
 
 function publicFileUrl(...parts: string[]): string | null {

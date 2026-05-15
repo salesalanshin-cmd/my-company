@@ -2,11 +2,12 @@ import type { Metadata } from "next"
 
 import { SiteHeader } from "@/components/landing/site-header"
 import { SiteFooter } from "@/components/landing/site-footer"
-import { siteConfig } from "@/lib/site-config"
 
 export const metadata: Metadata = {
-  title: "공지사항",
-  description: `${siteConfig.name} 공지사항`,
+  title: {
+    absolute: "공지사항 | 주식회사 순한연구소",
+  },
+  description: "주식회사 순한연구소의 최신 소식과 공지사항을 확인하세요.",
 }
 
 export default function NoticePage() {

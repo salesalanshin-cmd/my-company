@@ -23,8 +23,11 @@ import { siteConfig } from "@/lib/site-config"
 import { cn } from "@/lib/utils"
 
 export const metadata: Metadata = {
-  title: "서비스 · 솔루션",
-  description: `${siteConfig.name}의 직원화·창업·정부지원·R&D·AX 등 전문 서비스를 소개합니다.`,
+  title: {
+    absolute: "서비스·솔루션 | 주식회사 순한연구소",
+  },
+  description:
+    "창업지원, 정부지원사업, R&D, 수출입 컨설팅, 제조AX, 앱 개발, 자동화 시스템, AI 비전 에이전트까지 8가지 전문 서비스를 제공합니다.",
 }
 
 function publicFileUrl(...parts: string[]): string | null {
