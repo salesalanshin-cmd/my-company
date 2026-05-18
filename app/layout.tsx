@@ -43,6 +43,11 @@ export const metadata: Metadata = {
       "창업·정부지원사업·R&D·수출 컨설팅을 통해 단순 자문이 아닌 실행 파트너로서 기업 곁에 함께합니다.",
     images: ["/images/hero/slide1.jpg"],
   },
+  verification: {
+    other: {
+      "naver-site-verification": "c78749fa6fc4f357bd352e7cdfcd077ad5e1e402",
+    },
+  },
 }
 
 export default function RootLayout({
