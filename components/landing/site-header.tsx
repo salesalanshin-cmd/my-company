@@ -30,17 +30,17 @@ const servicesMenu = {
   ai: {
     title: "AI",
     items: [
-      { href: "/services#ai-agent", label: "AI Agent 개발" },
-      { href: "/services#ai-pipeline", label: "AI 파이프라인 구축" },
-      { href: "/services#ml-infra", label: "머신러닝 인프라 구축" },
+      { href: "/ai#ai-agent", label: "AI Agent 개발" },
+      { href: "/ai#ai-pipeline", label: "AI 파이프라인 구축" },
+      { href: "/ai#ml-infra", label: "머신러닝 인프라 구축" },
     ],
   },
   consulting: {
     title: "컨설팅",
     items: [
-      { href: "/services#startup", label: "창업 컨설팅" },
-      { href: "/services#rd", label: "정부지원과제·R&D 컨설팅" },
-      { href: "/services#export", label: "수출입 컨설팅" },
+      { href: "/consulting#startup", label: "창업 컨설팅" },
+      { href: "/consulting#rd", label: "정부지원과제·R&D 컨설팅" },
+      { href: "/consulting#export", label: "수출입 컨설팅" },
     ],
   },
 } as const
@@ -73,7 +73,13 @@ function useHash() {
 
 function isNavActive(href: string, pathname: string, hash: string) {
   if (href === "/about") return pathname === "/about"
-  if (href === "/services") return pathname === "/services" || pathname === "/dev"
+  if (href === "/services")
+    return (
+      pathname === "/services" ||
+      pathname === "/dev" ||
+      pathname === "/ai" ||
+      pathname === "/consulting"
+    )
   if (href === "/dev") return pathname === "/dev"
   if (href === "/reference") return pathname === "/reference"
   if (href === "/notice") return pathname === "/notice"
@@ -239,7 +245,7 @@ export function SiteHeader() {
             alt="순한연구소"
             width={400}
             height={120}
-            className="h-[40px] w-auto object-contain"
+            style={{ width: "auto", height: "40px", objectFit: "contain" }}
             priority
           />
         </Link>

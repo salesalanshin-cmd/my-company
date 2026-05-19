@@ -4,19 +4,30 @@ import Image from "next/image"
 import Link from "next/link"
 import {
   ArrowRight,
+  BarChart2,
   BarChart3,
+  Bot,
+  Brain,
+  Building2,
+  Cloud,
+  Code,
   Code2,
   Database,
   GitBranch,
   Globe,
   Layers,
   LineChart,
+  Monitor,
   MonitorSmartphone,
   Plug,
+  RefreshCw,
   Search,
   Server,
+  Settings,
   Shield,
+  ShieldCheck,
   Smartphone,
+  TrendingUp,
   Wind,
   Workflow,
   Zap,
@@ -76,12 +87,12 @@ function DevHero({
   )
 }
 
-function SectionCta() {
+function SectionCta({ label = "상담 문의하기" }: { label?: string }) {
   return (
     <div className="border-t bg-[#f8fafc] px-4 py-10 sm:px-6">
       <div className="mx-auto flex max-w-6xl justify-center">
         <Button size="lg" className="bg-[#0066cc] hover:bg-[#0052a3]" asChild>
-          <Link href="/#contact">상담 문의하기</Link>
+          <Link href="/#contact">{label}</Link>
         </Button>
       </div>
     </div>
@@ -309,27 +320,6 @@ function BenefitsMarquee() {
   )
 }
 
-function FeatureCards({
-  items,
-}: {
-  items: readonly { title: string; icon: LucideIcon }[]
-}) {
-  return (
-    <div className="mx-auto grid max-w-6xl gap-4 px-4 sm:grid-cols-3 sm:px-6">
-      {items.map(({ title, icon: Icon }) => (
-        <div
-          key={title}
-          className="flex flex-col items-center rounded-xl border border-slate-200 bg-white p-6 text-center shadow-md transition-shadow hover:shadow-lg"
-        >
-          <div className="flex size-14 items-center justify-center rounded-full bg-[#0066cc]/10">
-            <Icon className="size-7 text-[#0066cc]" aria-hidden />
-          </div>
-          <h3 className="mt-4 text-lg font-semibold text-slate-900">{title}</h3>
-        </div>
-      ))}
-    </div>
-  )
-}
 
 function WebsiteSection() {
   return (
@@ -394,36 +384,420 @@ function WebsiteSection() {
   )
 }
 
-function SimpleDevSection({
-  id,
-  eyebrow,
-  titleEn,
-  titleKo,
-  imagePath,
-  features,
-}: {
+const appFeatures = [
+  {
+    title: "크로스플랫폼",
+    description:
+      "iOS와 Android 앱을 하나의 코드베이스로 동시에 개발할 수 있어 비용과 시간을 절감합니다.",
+    icon: Smartphone,
+  },
+  {
+    title: "빠른 개발 속도",
+    description:
+      "핫리로드(Hot Reload) 기능을 통해 개발-테스트-수정 사이클을 빠르게 반복할 수 있습니다.",
+    icon: Zap,
+  },
+  {
+    title: "전문 개발 기반",
+    description:
+      "노코드·로우코드가 아닌 실제 코드 기반으로 확장성과 운영 편의성을 고려해 정확하게 개발합니다.",
+    icon: Code,
+  },
+  {
+    title: "SEO & 퍼포먼스 최적화",
+    description:
+      "앱 성능 최적화와 함께 관련 웹 연동 시 검색 노출까지 고려한 구조로 개발합니다.",
+    icon: TrendingUp,
+  },
+  {
+    title: "API 연동",
+    description:
+      "기존 ERP·MES·외부 서비스와의 API 연동을 기본으로 고려하여 즉시 활용 가능한 앱을 구축합니다.",
+    icon: Plug,
+  },
+  {
+    title: "유지보수 & 업데이트",
+    description:
+      "납품 후에도 지속적인 업데이트와 오류 수정을 지원하며 장기 운영을 함께합니다.",
+    icon: RefreshCw,
+  },
+] as const
+
+const appTechStack: { name: string; icon: LucideIcon }[] = [
+  { name: "Flutter / Dart", icon: Smartphone },
+  { name: "React Native", icon: Code2 },
+  { name: "Next.js (웹앱)", icon: Layers },
+  { name: "Firebase", icon: Zap },
+  { name: "REST API / GraphQL", icon: Plug },
+  { name: "Node.js 백엔드", icon: Server },
+  { name: "AWS / Vercel", icon: Cloud },
+  { name: "Git / GitHub", icon: GitBranch },
+]
+
+const appProcessSteps = [
+  {
+    step: "01",
+    title: "문의 및 견적 요청",
+    description:
+      "홈페이지 문의하기를 통해 요청하시면 1일 이내로 예상 견적과 일정을 안내드립니다.",
+  },
+  {
+    step: "02",
+    title: "계약 및 착수",
+    description: "요구사항 확정 후 계약을 진행하고 프로젝트가 시작됩니다.",
+  },
+  {
+    step: "03",
+    title: "기획 및 화면 설계",
+    description: "앱 구조와 화면 흐름(UI Flow)을 설계하고 와이어프레임을 제작합니다.",
+  },
+  {
+    step: "04",
+    title: "디자인 및 개발",
+    description: "UI 디자인 확정 후 실제 앱 기능 개발을 진행합니다.",
+  },
+  {
+    step: "05",
+    title: "테스트 및 피드백 반영",
+    description: "실제 디바이스에서 테스트하고 피드백을 수렴하여 수정 반영합니다.",
+  },
+  {
+    step: "06",
+    title: "최종 납품",
+    description:
+      "Android(APK/AAB) 및 iOS(IPA) 패키지로 제공되며, 앱스토어 등록 가이드도 함께 안내드립니다.",
+  },
+] as const
+
+type DevFeature = {
+  title: string
+  description: string
+  icon: LucideIcon
+}
+
+type DevProcessStep = {
+  step: string
+  title: string
+  description: string
+}
+
+type DevDetailSectionProps = {
   id: string
-  eyebrow?: string
-  titleEn: string
-  titleKo: string
-  imagePath: string
-  features: readonly { title: string; icon: LucideIcon }[]
+  hero: {
+    eyebrow?: string
+    titleEn: string
+    titleKo: string
+    imagePath: string
+  }
+  featuresTitle: string
+  featuresSubtitle: string
+  features: readonly DevFeature[]
+  techStack: readonly { name: string; icon: LucideIcon }[]
+  processTitle: string
+  processSubtitle: string
+  processSteps: readonly DevProcessStep[]
+  infoBox: string
+  ctaLabel: string
+}
+
+function DevFeatureCard({
+  title,
+  description,
+  icon: Icon,
+}: {
+  title: string
+  description: string
+  icon: LucideIcon
 }) {
+  return (
+    <div className="flex flex-col rounded-xl border border-slate-200 bg-white p-6 shadow-md transition-shadow hover:shadow-lg">
+      <div className="flex size-12 items-center justify-center rounded-full bg-[#0066cc]/10">
+        <Icon className="size-6 text-[#0066cc]" strokeWidth={1.5} aria-hidden />
+      </div>
+      <h4 className="mt-4 text-lg font-semibold text-slate-900">{title}</h4>
+      <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{description}</p>
+    </div>
+  )
+}
+
+function DevVerticalTimeline({ steps }: { steps: readonly DevProcessStep[] }) {
+  return (
+    <ol className="relative mx-auto max-w-3xl">
+      <div
+        className="absolute top-2 bottom-2 left-6 w-0.5 -translate-x-1/2 bg-[#0066cc]"
+        aria-hidden
+      />
+      {steps.map((item) => (
+        <li key={item.step} className="relative flex gap-6 pb-12 last:pb-0">
+          <div
+            className="relative z-10 flex size-12 shrink-0 items-center justify-center rounded-full bg-[#0066cc] text-sm font-bold text-white"
+            aria-hidden
+          >
+            {item.step}
+          </div>
+          <div className="min-w-0 flex-1 pt-1">
+            <h4 className="text-lg font-bold text-slate-900">{item.title}</h4>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground sm:text-base">
+              {item.description}
+            </p>
+          </div>
+        </li>
+      ))}
+    </ol>
+  )
+}
+
+function DevDetailSection({
+  id,
+  hero,
+  featuresTitle,
+  featuresSubtitle,
+  features,
+  techStack,
+  processTitle,
+  processSubtitle,
+  processSteps,
+  infoBox,
+  ctaLabel,
+}: DevDetailSectionProps) {
   return (
     <section id={id} className="scroll-mt-28 border-t">
       <DevHero
-        eyebrow={eyebrow}
-        titleEn={titleEn}
-        titleKo={titleKo}
-        imagePath={imagePath}
+        eyebrow={hero.eyebrow}
+        titleEn={hero.titleEn}
+        titleKo={hero.titleKo}
+        imagePath={hero.imagePath}
       />
-      <div className="bg-white py-14 sm:py-16">
-        <FeatureCards items={features} />
-      </div>
-      <SectionCta />
+
+      <section className="bg-white py-14 sm:py-20">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <div className="mx-auto max-w-2xl text-center">
+            <h3 className="text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
+              {featuresTitle}
+            </h3>
+            <p className="mt-3 text-muted-foreground sm:text-base">{featuresSubtitle}</p>
+          </div>
+          <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {features.map((feature) => (
+              <DevFeatureCard key={feature.title} {...feature} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-gradient-to-br from-[#060d1a] via-[#0a1f3c] to-[#0c2348] py-14 sm:py-20">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <h3 className="text-center text-2xl font-semibold tracking-tight text-white sm:text-3xl">
+            TECH STACK
+          </h3>
+          <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 lg:gap-4">
+            {techStack.map(({ name, icon: Icon }) => (
+              <div
+                key={name}
+                className="flex flex-col items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-3 py-5 text-center backdrop-blur-sm"
+              >
+                <Icon className="size-8 text-[#4da3ff]" strokeWidth={1.5} aria-hidden />
+                <span className="text-xs font-medium text-white sm:text-sm">{name}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-white py-14 sm:py-20">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <div className="mx-auto max-w-2xl text-center">
+            <h3 className="text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
+              {processTitle}
+            </h3>
+            <p className="mt-3 text-muted-foreground sm:text-base">
+              {processSubtitle}
+            </p>
+          </div>
+          <div className="mt-14">
+            <DevVerticalTimeline steps={processSteps} />
+          </div>
+          <div className="mx-auto mt-14 max-w-3xl rounded-xl border border-[#0066cc]/20 bg-[#0066cc]/5 px-6 py-5 text-center sm:px-8 sm:py-6">
+            <p className="text-sm leading-relaxed text-slate-700 sm:text-base">
+              {infoBox}
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <SectionCta label={ctaLabel} />
     </section>
   )
 }
+
+const mesFeatures: DevFeature[] = [
+  {
+    title: "경량형 구조",
+    description:
+      "대형 ERP 없이도 도입 가능한 경량형 구조로 중소 제조업에 최적화되어 있습니다.",
+    icon: Layers,
+  },
+  {
+    title: "실시간 생산 현황",
+    description:
+      "라인별·설비별 생산 현황을 실시간으로 모니터링하고 이상 징후를 즉시 파악합니다.",
+    icon: Monitor,
+  },
+  {
+    title: "불량·품질 관리",
+    description:
+      "불량 유형별 데이터를 수집·분석하여 품질 개선 방향을 수립할 수 있습니다.",
+    icon: ShieldCheck,
+  },
+  {
+    title: "설비 가동률 분석",
+    description:
+      "설비별 가동·비가동 시간을 자동 집계하여 OEE 분석과 개선 방향을 제시합니다.",
+    icon: BarChart2,
+  },
+  {
+    title: "정부지원사업 연계",
+    description:
+      "스마트공장 보급사업, AI바우처 등 정부지원사업과 연계하여 도입 비용을 최소화합니다.",
+    icon: Building2,
+  },
+  {
+    title: "맞춤형 커스터마이징",
+    description:
+      "업종·공정·규모에 따라 필요한 기능만 선택해 구성하는 맞춤형 시스템을 제공합니다.",
+    icon: Settings,
+  },
+]
+
+const mesTechStack: { name: string; icon: LucideIcon }[] = [
+  { name: "Next.js / React", icon: Layers },
+  { name: "TypeScript", icon: Code2 },
+  { name: "PostgreSQL / MySQL", icon: Database },
+  { name: "REST API", icon: Plug },
+  { name: "Node.js 백엔드", icon: Server },
+  { name: "Supabase / AWS", icon: Cloud },
+  { name: "실시간 데이터 처리", icon: Zap },
+  { name: "Git / GitHub", icon: GitBranch },
+]
+
+const mesProcessSteps: DevProcessStep[] = [
+  {
+    step: "01",
+    title: "현장 진단 및 요구사항 분석",
+    description:
+      "제조 현장의 공정 흐름, 설비 구성, 데이터 현황을 분석하고 필요 기능을 정의합니다.",
+  },
+  {
+    step: "02",
+    title: "시스템 설계",
+    description: "공정별 데이터 흐름과 화면 구조를 설계하고 DB 스키마를 구성합니다.",
+  },
+  {
+    step: "03",
+    title: "개발 및 현장 테스트",
+    description: "핵심 기능 개발 후 실제 현장에서 테스트하고 피드백을 반영합니다.",
+  },
+  {
+    step: "04",
+    title: "데이터 연동 및 설비 연결",
+    description:
+      "기존 설비·ERP·바코드 등과 연동하여 데이터 자동 수집 환경을 구축합니다.",
+  },
+  {
+    step: "05",
+    title: "교육 및 안정화",
+    description: "현장 담당자 교육을 진행하고 초기 운영 안정화를 지원합니다.",
+  },
+  {
+    step: "06",
+    title: "유지보수 및 고도화",
+    description: "운영 중 발생하는 이슈 대응과 기능 고도화를 지속적으로 지원합니다.",
+  },
+]
+
+const automationFeatures: DevFeature[] = [
+  {
+    title: "업무 프로세스 분석",
+    description:
+      "반복 업무와 비효율 구간을 분석하여 자동화 우선순위와 구조를 설계합니다.",
+    icon: GitBranch,
+  },
+  {
+    title: "RPA 자동화",
+    description:
+      "반복적인 수작업 업무를 RPA로 자동화하여 인력 낭비를 줄이고 정확도를 높입니다.",
+    icon: Bot,
+  },
+  {
+    title: "API 시스템 통합",
+    description:
+      "기존 ERP·MES·CRM·외부 서비스를 API로 연결하여 데이터 사일로를 해소합니다.",
+    icon: Plug,
+  },
+  {
+    title: "AI 에이전트 연동",
+    description:
+      "단순 자동화를 넘어 AI 에이전트와 연동하여 판단·처리까지 자동화합니다.",
+    icon: Brain,
+  },
+  {
+    title: "정부지원사업 연계",
+    description:
+      "스마트공장, AI바우처, 디지털전환 지원사업 등을 활용해 도입 비용을 최소화합니다.",
+    icon: Building2,
+  },
+  {
+    title: "유지보수 & 확장",
+    description:
+      "구축 이후에도 업무 변화에 따라 유연하게 확장·수정할 수 있는 구조로 개발합니다.",
+    icon: RefreshCw,
+  },
+]
+
+const automationTechStack: { name: string; icon: LucideIcon }[] = [
+  { name: "Python (자동화 스크립트)", icon: Code },
+  { name: "Node.js", icon: Server },
+  { name: "REST API / GraphQL", icon: Plug },
+  { name: "RPA (업무 자동화)", icon: Bot },
+  { name: "AI Agent 연동", icon: Brain },
+  { name: "PostgreSQL / MySQL", icon: Database },
+  { name: "AWS / Vercel", icon: Cloud },
+  { name: "Git / GitHub", icon: GitBranch },
+]
+
+const automationProcessSteps: DevProcessStep[] = [
+  {
+    step: "01",
+    title: "업무 진단 및 요구사항 분석",
+    description:
+      "현재 업무 흐름과 시스템 환경을 분석하고 자동화·통합이 필요한 영역을 정의합니다.",
+  },
+  {
+    step: "02",
+    title: "자동화 구조 설계",
+    description: "자동화 범위와 시스템 연동 구조를 설계하고 우선순위를 수립합니다.",
+  },
+  {
+    step: "03",
+    title: "개발 및 테스트",
+    description: "핵심 자동화 기능을 개발하고 실제 업무 환경에서 테스트합니다.",
+  },
+  {
+    step: "04",
+    title: "시스템 연동 및 통합",
+    description: "기존 시스템과 API 연동을 완료하고 데이터 흐름을 검증합니다.",
+  },
+  {
+    step: "05",
+    title: "교육 및 인수인계",
+    description: "담당자 교육을 진행하고 운영 가이드를 제공합니다.",
+  },
+  {
+    step: "06",
+    title: "유지보수 및 고도화",
+    description: "운영 중 발생하는 이슈 대응과 추가 자동화 기능 확장을 지원합니다.",
+  },
+]
 
 export function DevPageContent() {
   return (
@@ -442,41 +816,63 @@ export function DevPageContent() {
 
       <WebsiteSection />
 
-      <SimpleDevSection
+      <DevDetailSection
         id="app"
-        eyebrow="모바일 퍼스트 전략"
-        titleEn="Application Development"
-        titleKo="iOS·Android 네이티브부터 크로스플랫폼까지, 비즈니스에 최적화된 앱을 개발합니다."
-        imagePath="app-hero.jpg"
-        features={[
-          { title: "iOS / Android 네이티브 앱", icon: Smartphone },
-          { title: "React Native 크로스플랫폼", icon: Code2 },
-          { title: "PWA (Progressive Web App)", icon: MonitorSmartphone },
-        ]}
+        hero={{
+          eyebrow: "iOS · Android · 크로스플랫폼",
+          titleEn: "Application Development",
+          titleKo:
+            "하나의 코드로 iOS와 Android를 동시에, 비즈니스에 최적화된 앱을 개발합니다.",
+          imagePath: "app-hero.jpg",
+        }}
+        featuresTitle="순한연구소 앱 개발이 특별한 이유"
+        featuresSubtitle="개발만이 아닌, 고객에게 도달하고 활용되는 제품을 설계합니다."
+        features={appFeatures}
+        techStack={appTechStack}
+        processTitle="앱 개발 프로세스"
+        processSubtitle="처음부터 출시까지, 투명하고 전문적인 절차로 함께합니다."
+        processSteps={appProcessSteps}
+        infoBox="앱 개발을 위해 로고/컬러 가이드, 주요 기능 목록, 참고 앱 사례 등의 자료를 사전에 준비해주시면 더욱 빠른 진행이 가능합니다."
+        ctaLabel="앱 개발 문의하기"
       />
 
-      <SimpleDevSection
+      <DevDetailSection
         id="mes"
-        titleEn="MES System"
-        titleKo="제조 현장에 최적화된 경량형 생산관리 시스템을 구축합니다."
-        imagePath="mes-hero.jpg"
-        features={[
-          { title: "실시간 생산 현황 모니터링", icon: LineChart },
-          { title: "불량·품질 데이터 관리", icon: BarChart3 },
-          { title: "설비 가동률 분석", icon: Workflow },
-        ]}
+        hero={{
+          eyebrow: "제조 현장 맞춤형 솔루션",
+          titleEn: "MES System",
+          titleKo: "제조 현장에 최적화된 경량형 생산관리 시스템을 구축합니다.",
+          imagePath: "mes-hero.jpg",
+        }}
+        featuresTitle="순한연구소 MES가 특별한 이유"
+        featuresSubtitle="현장을 이해한 개발자가 만드는 실전형 생산관리 시스템입니다."
+        features={mesFeatures}
+        techStack={mesTechStack}
+        processTitle="MES 구축 프로세스"
+        processSubtitle="현장 분석부터 운영까지, 단계별로 함께합니다."
+        processSteps={mesProcessSteps}
+        infoBox="MES 도입을 위해 현재 공정 흐름도, 설비 목록, 관리하고 싶은 데이터 항목을 사전에 정리해주시면 더욱 정확한 견적과 빠른 구축이 가능합니다."
+        ctaLabel="MES 도입 문의하기"
       />
 
-      <SimpleDevSection
+      <DevDetailSection
         id="automation"
-        titleEn="SI / Automation System"
-        titleKo="업무 프로세스를 자동화하고 시스템을 통합하여 운영 효율을 극대화합니다."
-        imagePath="si-hero.jpg"
-        features={[
-          { title: "업무 프로세스 자동화", icon: Workflow },
-          { title: "시스템 통합(SI) 구축", icon: Plug },
-          { title: "RPA·API 연동", icon: Zap },
-        ]}
+        hero={{
+          eyebrow: "업무 효율화 & 시스템 통합",
+          titleEn: "SI / Automation System",
+          titleKo:
+            "업무 프로세스를 자동화하고 시스템을 통합하여 운영 효율을 극대화합니다.",
+          imagePath: "si-hero.jpg",
+        }}
+        featuresTitle="순한연구소 SI/자동화가 특별한 이유"
+        featuresSubtitle="단순 개발이 아닌, 업무 구조를 이해하고 설계하는 자동화입니다."
+        features={automationFeatures}
+        techStack={automationTechStack}
+        processTitle="SI/자동화 구축 프로세스"
+        processSubtitle="업무 분석부터 실제 운영까지, 단계별로 함께합니다."
+        processSteps={automationProcessSteps}
+        infoBox="자동화 구축을 위해 현재 업무 프로세스 흐름도, 사용 중인 시스템 목록, 자동화하고 싶은 업무 목록을 사전에 정리해주시면 더욱 정확한 견적과 빠른 구축이 가능합니다."
+        ctaLabel="자동화 시스템 문의하기"
       />
     </>
   )

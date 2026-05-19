@@ -24,10 +24,11 @@ export function SiteFooter() {
             <Link href="/" className="inline-block">
               <Image
                 src="/logo.png"
-                alt={siteConfig.name}
+                alt="순한연구소"
                 width={160}
                 height={48}
-                className="h-12 w-auto object-contain"
+                style={{ width: "auto", height: "40px", objectFit: "contain" }}
+                priority
               />
             </Link>
             <p className="mt-3 text-sm leading-relaxed text-[#222]">
