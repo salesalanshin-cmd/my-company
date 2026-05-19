@@ -18,29 +18,29 @@ const aboutLinks = [
 ] as const
 
 const servicesMenu = {
-  consulting: {
-    title: "컨설팅",
-    items: [
-      { href: "/services#employee", label: "직원화 서비스" },
-      { href: "/services#startup", label: "창업 컨설팅" },
-      { href: "/services#rd", label: "정부지원과제·R&D" },
-      { href: "/services#export", label: "수출입 컨설팅" },
-    ],
-  },
   development: {
     title: "개발",
     items: [
-      { href: "/services#website", label: "홈페이지 제작" },
-      { href: "/services#app", label: "앱 개발" },
-      { href: "/services#mes", label: "경량형 제조관리 시스템" },
-      { href: "/services#automation", label: "SI/자동화" },
+      { href: "/dev#website", label: "홈페이지 제작" },
+      { href: "/dev#app", label: "애플리케이션(앱) 개발" },
+      { href: "/dev#mes", label: "MES 시스템" },
+      { href: "/dev#automation", label: "SI/자동화 시스템" },
     ],
   },
   ai: {
     title: "AI",
     items: [
-      { href: "/services#ai-media", label: "AI 이미지·동영상 제작" },
-      { href: "/services#ai-service", label: "AI 서비스 구축" },
+      { href: "/services#ai-agent", label: "AI Agent 개발" },
+      { href: "/services#ai-pipeline", label: "AI 파이프라인 구축" },
+      { href: "/services#ml-infra", label: "머신러닝 인프라 구축" },
+    ],
+  },
+  consulting: {
+    title: "컨설팅",
+    items: [
+      { href: "/services#startup", label: "창업 컨설팅" },
+      { href: "/services#rd", label: "정부지원과제·R&D 컨설팅" },
+      { href: "/services#export", label: "수출입 컨설팅" },
     ],
   },
 } as const
@@ -73,7 +73,8 @@ function useHash() {
 
 function isNavActive(href: string, pathname: string, hash: string) {
   if (href === "/about") return pathname === "/about"
-  if (href === "/services") return pathname === "/services"
+  if (href === "/services") return pathname === "/services" || pathname === "/dev"
+  if (href === "/dev") return pathname === "/dev"
   if (href === "/reference") return pathname === "/reference"
   if (href === "/notice") return pathname === "/notice"
   if (href.startsWith("/#")) return pathname === "/" && hash === href.slice(1)
@@ -279,17 +280,10 @@ export function SiteHeader() {
             activeMenu={activeMenu}
             onActivate={activateMenu}
             onDeactivate={deactivateMenu}
-            panelClassName="min-w-[28rem] p-3"
+            panelClassName="w-[38rem] max-w-[calc(100vw-2rem)] p-4"
           >
-            <div className="grid grid-cols-2 gap-x-6">
-              <CategoryBlock
-                title={servicesMenu.consulting.title}
-                items={servicesMenu.consulting.items}
-                pathname={pathname}
-                hash={hash}
-                onNavigate={deactivateMenu}
-              />
-              <div className="space-y-1">
+            <div className="grid grid-cols-2 gap-x-10">
+              <div className="min-w-0 space-y-4">
                 <CategoryBlock
                   title={servicesMenu.development.title}
                   items={servicesMenu.development.items}
@@ -300,6 +294,15 @@ export function SiteHeader() {
                 <CategoryBlock
                   title={servicesMenu.ai.title}
                   items={servicesMenu.ai.items}
+                  pathname={pathname}
+                  hash={hash}
+                  onNavigate={deactivateMenu}
+                />
+              </div>
+              <div className="flex min-w-0 flex-col justify-center border-l border-slate-100 pl-8">
+                <CategoryBlock
+                  title={servicesMenu.consulting.title}
+                  items={servicesMenu.consulting.items}
                   pathname={pathname}
                   hash={hash}
                   onNavigate={deactivateMenu}

@@ -3,13 +3,12 @@ import path from "node:path"
 import type { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
-import { Eye, Target } from "lucide-react"
+import { Bot, Briefcase, Code, Eye, Target } from "lucide-react"
 import type { LucideIcon } from "lucide-react"
 
 import { SiteHeader } from "@/components/landing/site-header"
 import { SiteFooter } from "@/components/landing/site-footer"
 import { Button } from "@/components/ui/button"
-import { siteConfig } from "@/lib/site-config"
 import { cn } from "@/lib/utils"
 
 export const metadata: Metadata = {
@@ -95,23 +94,53 @@ function MilestoneBody({
 const missionVisionItems = [
   {
     label: "OUR MISSION" as const,
-    body: "창업·정부지원·R&D·수출입 현장에서 말이 아닌 실행으로 책임지며, 기업이 집중해야 할 본업에 에너지를 돌릴 수 있도록 기획·실무·정산까지 매니징합니다.",
+    title: "AI 기술을 누구나 쉽게 활용할 수 있도록 기술장벽을 낮춘다.",
+    description:
+      "누구나 쉽게 활용할 수 있는 AI 기술 보급을 통해 산업의 변화를 만듭니다.",
     icon: Target,
   },
   {
     label: "OUR VISION" as const,
-    body: "산재한 제조·업무 데이터를 연결하고, AX·AI 비전과 지능형 공장 에이전트로 스마트팩토리와 완성도 높은 업무 보조 환경을 구현하는 기술·컨설팅 기업이 되겠습니다.",
+    title: "대한민국에서 AI 기술활용을 가장 쉽게 만들어 주는 기업",
+    description:
+      "AI와 DX기술을 누구나 쉽게 도입하고 활용할 수 있는 환경을 만듭니다.",
     icon: Eye,
   },
 ]
 
+const businessFields = [
+  {
+    image: "business1.jpg",
+    title: "컨설팅",
+    description: "정부지원사업·R&D·수출입·창업 컨설팅",
+    icon: Briefcase,
+    fallbackClassName: "bg-gradient-to-br from-[#060d1a] via-[#0a1f3c] to-[#143d8a]",
+  },
+  {
+    image: "business2.jpg",
+    title: "SW 개발",
+    description: "홈페이지·앱·경량형 MES·자동화 시스템 개발",
+    icon: Code,
+    fallbackClassName: "bg-gradient-to-br from-[#0a1f3c] via-[#0066cc] to-[#4da3ff]",
+  },
+  {
+    image: "business3.jpg",
+    title: "AI 에이전트 개발",
+    description: "맞춤형 AI 에이전트·데이터 자동화·AI 서비스 구축",
+    icon: Bot,
+    fallbackClassName: "bg-gradient-to-br from-slate-700 via-slate-600 to-slate-500",
+  },
+] as const
+
 function MissionVisionCard({
   label,
-  body,
+  title,
+  description,
   icon: Icon,
 }: {
   label: string
-  body: string
+  title: string
+  description: string
   icon: LucideIcon
 }) {
   return (
@@ -128,8 +157,11 @@ function MissionVisionCard({
       <div className="flex min-w-0 flex-1 items-center gap-6">
         <div className="min-w-0 flex-1">
           <h3 className="text-lg font-bold tracking-wide text-blue-600 uppercase">{label}</h3>
+          <p className="mt-3 text-pretty text-base font-semibold leading-snug text-foreground sm:text-lg">
+            {title}
+          </p>
           <p className="mt-2 text-pretty text-sm leading-relaxed text-gray-600 sm:text-base">
-            {body}
+            {description}
           </p>
         </div>
         <Icon
@@ -139,6 +171,39 @@ function MissionVisionCard({
         />
       </div>
     </div>
+  )
+}
+
+function BusinessFieldCard({
+  image,
+  title,
+  description,
+  icon: Icon,
+  fallbackClassName,
+}: (typeof businessFields)[number]) {
+  const imageSrc = publicFileUrl("images", image)
+
+  return (
+    <article className="group relative h-[350px] overflow-hidden rounded-xl">
+      <div className="absolute inset-0 transition-transform duration-500 group-hover:scale-105">
+        {imageSrc ? (
+          <Image src={imageSrc} alt="" fill className="object-cover" sizes="33vw" />
+        ) : (
+          <div className={cn("absolute inset-0", fallbackClassName)} aria-hidden />
+        )}
+      </div>
+      <div
+        className="absolute inset-0 bg-[rgba(0,0,0,0.6)] transition-colors duration-500 group-hover:bg-[rgba(0,0,0,0.4)]"
+        aria-hidden
+      />
+      <div className="relative z-10 flex h-full flex-col items-center justify-center px-6 text-center text-white">
+        <Icon className="mb-4 size-12 shrink-0 sm:size-14" strokeWidth={1.5} aria-hidden />
+        <h3 className="text-xl font-bold sm:text-2xl">{title}</h3>
+        <p className="mt-3 max-w-xs text-sm leading-relaxed text-white/90 sm:text-base">
+          {description}
+        </p>
+      </div>
+    </article>
   )
 }
 
@@ -223,7 +288,10 @@ export default function AboutPage() {
         </section>
 
         {/* 미션 / 비전 */}
-        <section className="border-t bg-white py-16 pb-24 sm:py-24 sm:pb-28">
+        <section
+          id="mission"
+          className="scroll-mt-28 border-t bg-white py-16 pb-24 sm:py-24 sm:pb-28"
+        >
           <div className="mx-auto max-w-6xl px-4 sm:px-6">
             <div className="mx-auto max-w-2xl text-center">
               <h2 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
@@ -242,7 +310,10 @@ export default function AboutPage() {
         </section>
 
         {/* 연혁 타임라인 */}
-        <section className="relative overflow-hidden border-t pt-24 pb-16 sm:pt-28 sm:pb-24">
+        <section
+          id="history"
+          className="relative scroll-mt-28 overflow-hidden border-t pt-24 pb-16 sm:pt-28 sm:pb-24"
+        >
           {historyBgUrl ? (
             <>
               <Image
@@ -312,7 +383,7 @@ export default function AboutPage() {
         </section>
 
         {/* 대표 인사말 */}
-        <section className="border-t bg-white py-16 sm:py-24">
+        <section id="ceo" className="scroll-mt-28 border-t bg-white py-16 sm:py-24">
           <div className="mx-auto max-w-6xl px-4 sm:px-6">
             <h2 className="text-center text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
               대표 인사말
@@ -368,7 +439,10 @@ export default function AboutPage() {
         </section>
 
         {/* 조직도 */}
-        <section className="border-t bg-white py-16 sm:py-24">
+        <section
+          id="organization"
+          className="scroll-mt-28 border-t bg-white py-16 sm:py-24"
+        >
           <div className="mx-auto max-w-6xl px-4 sm:px-6">
             <div className="mx-auto max-w-2xl text-center">
               <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">조직도</h2>
@@ -383,7 +457,10 @@ export default function AboutPage() {
         </section>
 
         {/* 기술 · 특허 · 인증 현황 */}
-        <section className="border-t bg-neutral-50 py-16 sm:py-24">
+        <section
+          id="certification"
+          className="scroll-mt-28 border-t bg-neutral-50 py-16 sm:py-24"
+        >
           <div className="mx-auto max-w-6xl px-4 sm:px-6">
             <h2 className="text-center text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
               기술 · 특허 · 인증 현황
@@ -403,6 +480,28 @@ export default function AboutPage() {
                   <h3 className="text-lg font-semibold text-foreground">{card.title}</h3>
                   <p className="mt-auto pt-6 text-sm text-neutral-500">추후 업데이트 예정</p>
                 </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* 사업분야 */}
+        <section
+          id="business"
+          className="scroll-mt-28 border-t bg-white py-16 sm:py-24"
+        >
+          <div className="mx-auto max-w-6xl px-4 sm:px-6">
+            <div className="mx-auto max-w-2xl text-center">
+              <p className="text-sm font-bold tracking-widest text-[#0066cc] uppercase">
+                BUSINESS FIELD
+              </p>
+              <h2 className="mt-3 text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
+                사업분야
+              </h2>
+            </div>
+            <div className="mt-12 grid grid-cols-1 gap-4 md:grid-cols-3">
+              {businessFields.map((field) => (
+                <BusinessFieldCard key={field.title} {...field} />
               ))}
             </div>
           </div>

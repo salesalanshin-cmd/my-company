@@ -35,7 +35,10 @@ export function TestimonialsSection() {
     >
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-2xl font-semibold tracking-tight text-white sm:text-3xl">
+          <p className="text-sm font-bold tracking-widest text-[#0066cc] uppercase">
+            CLIENT REVIEWS
+          </p>
+          <h2 className="mt-3 text-2xl font-semibold tracking-tight text-white sm:text-3xl">
             고객 후기
           </h2>
           <p className="mt-3 text-sm text-white/75 sm:text-base">

@@ -67,7 +67,10 @@ export function ServicesSection() {
     >
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
+          <p className="text-sm font-bold tracking-widest text-[#0066cc] uppercase">
+            OUR SERVICES
+          </p>
+          <h2 className="mt-3 text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
             서비스 · 역량
           </h2>
           <p className="mt-3 text-muted-foreground sm:text-base">
