@@ -41,13 +41,18 @@ function Lightbox({ state, onClose }: { state: LightboxState; onClose: () => voi
       >
         <X className="size-6" />
       </button>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={state.src}
-        alt={state.alt}
-        className="max-h-[90vh] max-w-[min(100%,1200px)] rounded-lg object-contain shadow-2xl"
+      <div
+        className="relative h-[90vh] w-full max-w-[min(100%,1200px)]"
         onClick={(e) => e.stopPropagation()}
-      />
+      >
+        <Image
+          src={state.src}
+          alt={state.alt}
+          fill
+          className="rounded-lg object-contain shadow-2xl"
+          sizes="1200px"
+        />
+      </div>
     </div>
   )
 }
