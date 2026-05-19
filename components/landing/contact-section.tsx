@@ -67,7 +67,7 @@ export function ContactSection() {
   return (
     <section
       id="contact"
-      className="border-t bg-gradient-to-b from-[#060d1a] via-[#0a1a32] to-[#0c2348] py-24 text-white sm:py-32 lg:py-36"
+      className="bg-gradient-to-b from-[#060d1a] via-[#0a1a32] to-[#0c2348] py-24 text-white sm:py-32 lg:py-36"
     >
       <div className="mx-auto grid max-w-6xl grid-cols-1 gap-14 px-4 sm:gap-16 sm:px-6 lg:grid-cols-2 lg:items-center lg:gap-20 xl:gap-24">
         <div className="flex flex-col justify-center lg:min-h-0">

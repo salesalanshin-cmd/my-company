@@ -1,5 +1,8 @@
 import type { Metadata } from "next"
 import { Noto_Sans_KR } from "next/font/google"
+import Script from "next/script"
+
+import { QuickMenu } from "@/components/ui/quick-menu"
 
 import "./globals.css"
 
@@ -57,7 +60,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko" className={`${noto.variable} h-full antialiased`}>
-      <body className={`${noto.className} min-h-full flex flex-col`}>{children}</body>
+      <head>
+        <Script
+          src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=634395e4d4c7779371d938fdffb5109f&autoload=false"
+          strategy="beforeInteractive"
+        />
+      </head>
+      <body className={`${noto.className} min-h-full flex flex-col`}>
+        <QuickMenu />
+        {children}
+      </body>
     </html>
   )
 }
